@@ -9,6 +9,7 @@ export interface PaprModel<T extends SchemaType = SchemaType> {
 }
 
 export type PaprRepository<T extends PaprModel> = Model<T['schema'][0], object>;
+export type PaprRepositoryResult<T extends PaprModel> = T['schema'][0];
 
 type BasePaprOptions = {
   models: PaprModel[] | string;

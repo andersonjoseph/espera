@@ -3,10 +3,10 @@ import { WaitlistsService } from './waitlist.service';
 
 @Controller('waitlists')
 export class WaitlistsController {
-  constructor(private readonly waitlistService: WaitlistsService) {}
+  constructor(private readonly waitlistsService: WaitlistsService) {}
 
   @Get()
   async findAll(): Promise<void> {
-    await this.waitlistService.get();
+    await this.waitlistsService.get();
   }
 }

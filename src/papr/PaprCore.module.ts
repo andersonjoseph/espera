@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { MongoClient, MongoError } from 'mongodb';
 import Papr from 'papr';
-import * as fg from 'fast-glob';
+import fg from 'fast-glob';
 import * as path from 'path';
 import { ImportedPaprModel, PaprOptions } from '.';
 import { Logger } from '@nestjs/common';

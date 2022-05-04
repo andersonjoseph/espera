@@ -7,7 +7,6 @@ const userSchema = schema({
   name: types.string({ required: false }),
   date: types.date({ required: true }),
   referrers: types.number({ required: true, minimum: 0 }),
-  referralLink: types.string({ required: true }),
   verified: types.boolean({ required: true }),
   referredBy: types.string({ required: false }),
 });
