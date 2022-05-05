@@ -1,10 +1,10 @@
 import FastestValidator from 'fastest-validator';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 const schema = {
   $$root: true,
   type: 'objectID',
-  ObjectID, // TODO: This is deprecated
+  ObjectID: ObjectId,
 } as const;
 
 const v = new FastestValidator();
