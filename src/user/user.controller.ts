@@ -13,8 +13,8 @@ import User from './user.model';
 import { UsersService } from './user.service';
 import { PaprRepositoryResult } from '../papr';
 import { createUserDto, createUserValidator } from './createUser.dto';
-import { FastestValidatorPipe } from 'src/FastestValidatorPipe';
-import { objectIdValidator } from 'src/common';
+import { FastestValidatorPipe } from '../FastestValidatorPipe';
+import { objectIdValidator } from '../common';
 import { ObjectId } from 'mongodb';
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
 
