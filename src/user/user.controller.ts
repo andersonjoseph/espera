@@ -15,7 +15,6 @@ import { PaprRepositoryResult } from '../papr';
 import { createUserDto, createUserValidator } from './createUser.dto';
 import { FastestValidatorPipe } from '../FastestValidatorPipe';
 import { objectIdValidator } from '../common';
-import { ObjectId } from 'mongodb';
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
 
 @Controller('api/users')
@@ -33,7 +32,7 @@ export class UsersController {
   async findOne(
     @Param('id', new FastestValidatorPipe(objectIdValidator)) id: string,
   ): Promise<PaprRepositoryResult<typeof User>> {
-    const user = await this.usersService.getById(new ObjectId(id));
+    const user = await this.usersService.getById(id);
 
     if (!user) throw new NotFoundException();
 
@@ -54,7 +53,7 @@ export class UsersController {
   async remove(
     @Param('id', new FastestValidatorPipe(objectIdValidator)) id: string,
   ): Promise<void> {
-    await this.usersService.remove(new ObjectId(id));
+    await this.usersService.remove(id);
   }
 
   @Patch(':id')
@@ -62,7 +61,7 @@ export class UsersController {
     @Param('id', new FastestValidatorPipe(objectIdValidator)) id: string,
     @Body(new FastestValidatorPipe(updateUserValidator)) input: updateUserDto,
   ): Promise<PaprRepositoryResult<typeof User>> {
-    const updatedUser = await this.usersService.update(new ObjectId(id), input);
+    const updatedUser = await this.usersService.update(id, input);
 
     if (!updatedUser) throw new NotFoundException();
 

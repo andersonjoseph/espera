@@ -30,10 +30,8 @@ export class UsersService {
     return user;
   }
 
-  async getById(
-    id: ObjectId,
-  ): Promise<PaprRepositoryResult<typeof User> | null> {
-    const user = await this.userRepository.findById(id);
+  async getById(id: string): Promise<PaprRepositoryResult<typeof User> | null> {
+    const user = await this.userRepository.findById(new ObjectId(id));
 
     return user;
   }
@@ -80,15 +78,16 @@ export class UsersService {
     return newUser;
   }
 
-  async remove(id: ObjectId): Promise<void> {
-    await this.userRepository.deleteOne({ _id: id });
+  async remove(id: string): Promise<void> {
+    await this.userRepository.deleteOne({ _id: new ObjectId(id) });
   }
+
   async update(
-    id: ObjectId,
+    id: string,
     input: updateUserDto,
   ): Promise<PaprRepositoryResult<typeof User> | null> {
     const updatedUser = await this.userRepository.findOneAndUpdate(
-      { _id: id },
+      { _id: new ObjectId(id) },
       { $set: input },
     );
 
