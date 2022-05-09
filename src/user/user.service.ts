@@ -1,5 +1,6 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
+import { PositiveNumber } from 'src/common';
 import {
   PaprRepository,
   PaprRepositoryResult,
@@ -11,13 +12,28 @@ import { User } from './user.model';
 
 @Injectable()
 export class UsersService {
+  public readonly perPage = 20;
   constructor(
     @Inject(getPaprRepositoryToken(User))
     private readonly userRepository: PaprRepository<typeof User>,
   ) {}
 
-  async get(): Promise<PaprRepositoryResult<typeof User>[]> {
-    const users = await this.userRepository.find({});
+  async getCount(): Promise<number> {
+    const count = await this.userRepository.countDocuments({});
+
+    return count;
+  }
+
+  async get(
+    page: PositiveNumber = 1 as PositiveNumber,
+  ): Promise<PaprRepositoryResult<typeof User>[]> {
+    const users = await this.userRepository.find(
+      {},
+      {
+        limit: this.perPage,
+        skip: (page - 1) * this.perPage,
+      },
+    );
 
     return users;
   }

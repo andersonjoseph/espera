@@ -1,12 +1,14 @@
-import FastestValidator from 'fastest-validator';
-import { ObjectId } from 'mongodb';
+import { PaprModel, PaprRepositoryResult } from '../papr';
+export * from './objectIdValidator';
+export * from './ParsePositiveNumber.pipe';
 
-const schema = {
-  $$root: true,
-  type: 'objectID',
-  ObjectID: ObjectId,
-} as const;
+export type PositiveNumber = number & { _type: 'PositiveNumber' };
 
-const v = new FastestValidator();
-
-export const objectIdValidator = v.compile(schema);
+export type PaginatedResult<T extends PaprModel> = {
+  metadata: {
+    page: PositiveNumber;
+    perPage: number;
+    totalCount: number;
+  };
+  records: PaprRepositoryResult<T>[];
+};

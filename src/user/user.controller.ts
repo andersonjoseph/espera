@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   HttpCode,
@@ -8,13 +9,19 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import User from './user.model';
 import { UsersService } from './user.service';
 import { PaprRepositoryResult } from '../papr';
 import { createUserDto, createUserValidator } from './createUser.dto';
 import { FastestValidatorPipe } from '../FastestValidatorPipe';
-import { objectIdValidator } from '../common';
+import {
+  objectIdValidator,
+  ParsePositiveNumberPipe,
+  PositiveNumber,
+  PaginatedResult,
+} from '../common';
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
 
 @Controller('api/users')
@@ -22,10 +29,26 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(): Promise<PaprRepositoryResult<typeof User>[]> {
-    const users = await this.usersService.get();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParsePositiveNumberPipe)
+    page: PositiveNumber,
+  ): Promise<PaginatedResult<typeof User>> {
+    const perPage = this.usersService.perPage;
+    const [users, totalCount] = await Promise.all([
+      await this.usersService.get(page),
+      await this.usersService.getCount(),
+    ]);
 
-    return users;
+    const response = {
+      metadata: {
+        page,
+        perPage,
+        totalCount,
+      },
+      records: users,
+    };
+
+    return response;
   }
 
   @Get(':id')
