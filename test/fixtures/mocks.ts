@@ -15,4 +15,5 @@ export const userRepositoryMock = {
   aggregate: jest.fn().mockResolvedValue([userResultMock]),
   findById: jest.fn().mockResolvedValue(userResultMock),
   deleteOne: jest.fn().mockResolvedValue(undefined),
+  countDocuments: jest.fn().mockResolvedValue(10),
 };

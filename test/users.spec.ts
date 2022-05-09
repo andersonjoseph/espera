@@ -39,17 +39,44 @@ describe('users', () => {
 
   describe('/users (GET)', () => {
     it('should return an array of users', async () => {
-      const res = await supertest(app.getHttpServer()).get('/api/users/');
+      let res = await supertest(app.getHttpServer()).get('/api/users/');
 
       expect(res.status).toBe(200);
-      expect(res.body).toBeInstanceOf(Array);
+      expect(res.body).toHaveProperty('metadata');
+      expect(res.body).toHaveProperty('records');
+      expect(res.body.records).toBeInstanceOf(Array);
 
-      expect(res.body[0]).toHaveProperty('_id');
-      expect(res.body[0]).toHaveProperty('email');
-      expect(res.body[0]).toHaveProperty('position');
-      expect(res.body[0]).toHaveProperty('date');
-      expect(res.body[0]).toHaveProperty('referrers');
-      expect(res.body[0]).toHaveProperty('verified');
+      expect(res.body.records[0]).toHaveProperty('_id');
+      expect(res.body.records[0]).toHaveProperty('email');
+      expect(res.body.records[0]).toHaveProperty('position');
+      expect(res.body.records[0]).toHaveProperty('date');
+      expect(res.body.records[0]).toHaveProperty('referrers');
+      expect(res.body.records[0]).toHaveProperty('verified');
+
+      res = await supertest(app.getHttpServer()).get('/api/users?page=1');
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('metadata');
+      expect(res.body).toHaveProperty('records');
+      expect(res.body.records).toBeInstanceOf(Array);
+
+      expect(res.body.records[0]).toHaveProperty('_id');
+      expect(res.body.records[0]).toHaveProperty('email');
+      expect(res.body.records[0]).toHaveProperty('position');
+      expect(res.body.records[0]).toHaveProperty('date');
+      expect(res.body.records[0]).toHaveProperty('referrers');
+      expect(res.body.records[0]).toHaveProperty('verified');
+    });
+
+    it('should return error 400 if page is not a valid number', async () => {
+      let res = await supertest(app.getHttpServer()).get('/api/users/?page=0');
+      expect(res.status).toBe(400);
+
+      res = await supertest(app.getHttpServer()).get('/api/users/?page=-1');
+      expect(res.status).toBe(400);
+
+      res = await supertest(app.getHttpServer()).get('/api/users/?page=uno');
+      expect(res.status).toBe(400);
     });
   });
 
