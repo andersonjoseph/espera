@@ -9,6 +9,7 @@ import { PaprModule } from './papr';
   imports: [
     CacheModule.register({
       ttl: 60 * 30, // 30 minutes
+      isGlobal: true,
     }),
     WaitlistModule,
     UserModule,
