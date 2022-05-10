@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { CacheModule, CACHE_MANAGER, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import supertest from 'supertest';
 import { getPaprRepositoryToken, PaprRepository } from '../src/papr';
@@ -6,24 +6,27 @@ import { UsersController } from '../src/user/user.controller';
 import { UsersService } from '../src/user/user.service';
 import { User } from '../src/user/user.model';
 import { userRepositoryMock, userResultMock } from './fixtures/mocks';
+import { Cache } from 'cache-manager';
 
 describe('users', () => {
   let app: INestApplication;
 
   function serviceFactory(
     usersRepository: PaprRepository<typeof User>,
+    cacheManager: Cache,
   ): UsersService {
-    return new UsersService(usersRepository);
+    return new UsersService(usersRepository, cacheManager);
   }
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       controllers: [UsersController],
       providers: [
         {
           provide: UsersService,
           useFactory: serviceFactory,
-          inject: [getPaprRepositoryToken(User)],
+          inject: [getPaprRepositoryToken(User), CACHE_MANAGER],
         },
         {
           provide: getPaprRepositoryToken(User),

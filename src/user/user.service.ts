@@ -1,4 +1,9 @@
-import { Injectable, Inject, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  ConflictException,
+  CACHE_MANAGER,
+} from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { PositiveNumber } from 'src/common';
 import {
@@ -10,6 +15,7 @@ import { createUserDto } from './createUser.dto';
 import { updateUserDto } from './updateUser.dto';
 import { User } from './user.model';
 import * as fastq from 'fastq';
+import { Cache } from 'cache-manager';
 import { queueAsPromised } from 'fastq';
 
 @Injectable()
@@ -19,6 +25,7 @@ export class UsersService {
   constructor(
     @Inject(getPaprRepositoryToken(User))
     private readonly userRepository: PaprRepository<typeof User>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async getCount(): Promise<number> {
@@ -58,6 +65,12 @@ export class UsersService {
   private async getLastUser(): Promise<PaprRepositoryResult<
     typeof User
   > | null> {
+    const cachedLastUser = await this.cacheManager.get<
+      PaprRepositoryResult<typeof User>
+    >('lastUser');
+
+    if (cachedLastUser) return cachedLastUser;
+
     const [lastUser] = await this.userRepository.aggregate([
       {
         $sort: { date: -1 },
@@ -93,6 +106,8 @@ export class UsersService {
     };
 
     const newUser = await this.userRepository.insertOne(newUserData);
+
+    await this.cacheManager.set('lastUser', newUser);
 
     return newUser;
   }

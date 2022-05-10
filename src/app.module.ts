@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WaitlistModule } from './waitlist/waitlist.module';
@@ -7,6 +7,9 @@ import { PaprModule } from './papr';
 
 @Module({
   imports: [
+    CacheModule.register({
+      ttl: 60 * 30, // 30 minutes
+    }),
     WaitlistModule,
     UserModule,
     PaprModule.forRoot({
