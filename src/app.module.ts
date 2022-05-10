@@ -1,6 +1,4 @@
 import { CacheModule, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { WaitlistModule } from './waitlist/waitlist.module';
 import { UserModule } from './user/user.module';
 import { PaprModule } from './papr';
@@ -18,7 +16,5 @@ import { PaprModule } from './papr';
       models: 'src/**/*.model.ts',
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
