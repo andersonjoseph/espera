@@ -9,10 +9,13 @@ import {
 import { createUserDto } from './createUser.dto';
 import { updateUserDto } from './updateUser.dto';
 import { User } from './user.model';
+import * as fastq from 'fastq';
+import { queueAsPromised } from 'fastq';
 
 @Injectable()
 export class UsersService {
   public readonly perPage = 20;
+  private queue: queueAsPromised<createUserDto> | null = null;
   constructor(
     @Inject(getPaprRepositoryToken(User))
     private readonly userRepository: PaprRepository<typeof User>,
@@ -67,7 +70,7 @@ export class UsersService {
     return lastUser;
   }
 
-  async create(
+  private async insertUser(
     input: createUserDto,
   ): Promise<PaprRepositoryResult<typeof User>> {
     const [existingUser, lastUser] = await Promise.all([
@@ -90,6 +93,18 @@ export class UsersService {
     };
 
     const newUser = await this.userRepository.insertOne(newUserData);
+
+    return newUser;
+  }
+
+  async create(
+    input: createUserDto,
+  ): Promise<PaprRepositoryResult<typeof User>> {
+    if (!this.queue) {
+      this.queue = fastq.promise(this, this.insertUser, 1);
+    }
+
+    const newUser = await this.queue.push(input);
 
     return newUser;
   }
