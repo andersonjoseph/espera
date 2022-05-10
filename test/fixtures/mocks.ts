@@ -11,9 +11,11 @@ export const userRepositoryMock = {
   find: jest.fn().mockResolvedValue([userResultMock]),
   findOne: jest.fn().mockResolvedValue(userResultMock),
   findOneAndUpdate: jest.fn().mockResolvedValue(userResultMock),
+  findOneAndDelete: jest.fn().mockResolvedValue(userResultMock),
   insertOne: jest.fn().mockResolvedValue(userResultMock),
   aggregate: jest.fn().mockResolvedValue([userResultMock]),
   findById: jest.fn().mockResolvedValue(userResultMock),
   deleteOne: jest.fn().mockResolvedValue(undefined),
+  updateMany: jest.fn().mockResolvedValue(undefined),
   countDocuments: jest.fn().mockResolvedValue(10),
 };

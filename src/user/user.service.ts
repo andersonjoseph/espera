@@ -42,6 +42,7 @@ export class UsersService {
       {
         limit: this.perPage,
         skip: (page - 1) * this.perPage,
+        sort: { position: 1 },
       },
     );
 
@@ -125,13 +126,43 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.userRepository.deleteOne({ _id: new ObjectId(id) });
+    const deletedUser = await this.userRepository.findOneAndDelete({
+      _id: new ObjectId(id),
+    });
+
+    if (deletedUser) {
+      await this.userRepository.updateMany(
+        {
+          position: { $gte: deletedUser.position },
+        },
+        {
+          $inc: { position: 1 },
+        },
+      );
+
+      const lastUser = await this.cacheManager.get<
+        PaprRepositoryResult<typeof User>
+      >('lastUser');
+
+      if (lastUser?._id === deletedUser._id) this.cacheManager.del('lastUser');
+    }
   }
 
   async update(
     id: string,
     input: updateUserDto,
   ): Promise<PaprRepositoryResult<typeof User> | null> {
+    if (input.position) {
+      await this.userRepository.updateMany(
+        {
+          position: { $gte: input.position },
+        },
+        {
+          $inc: { position: 1 },
+        },
+      );
+    }
+
     const updatedUser = await this.userRepository.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
