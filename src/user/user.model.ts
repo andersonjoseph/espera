@@ -4,11 +4,11 @@ import { createModel } from '../papr';
 const userSchema = schema({
   position: types.number({ required: true, minimum: 1 }),
   email: types.string({ required: true }),
-  name: types.string({ required: false }),
+  name: types.string(),
   date: types.date({ required: true }),
   referrers: types.number({ required: true, minimum: 0 }),
   verified: types.boolean({ required: true }),
-  referredBy: types.string({ required: false }),
+  referredBy: types.string(),
 });
 
 export const User = createModel('users', userSchema);
