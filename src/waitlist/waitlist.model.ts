@@ -2,15 +2,19 @@ import { types, schema } from 'papr';
 import { createModel } from '../papr';
 
 const waitlistSchema = schema({
-  name: types.string({ required: false }),
+  name: types.string({ required: true }),
   date: types.date({ required: true }),
-  users: types.array(types.string(), { required: true }),
-  referrers: types.number({ required: true, minimum: 0 }),
-  options: types.object({
-    userSkips: types.number(),
-    sendEmails: types.boolean(),
-    verifyEmails: types.boolean(),
-  }),
+  options: types.object(
+    {
+      userSkips: types.number({ required: true }),
+      sendEmails: types.boolean({ required: true }),
+      verifyEmails: types.boolean({ required: true }),
+    },
+    {
+      additionalProperties: false,
+      required: true,
+    },
+  ),
 });
 
 export const Waitlist = createModel('waitlists', waitlistSchema);
