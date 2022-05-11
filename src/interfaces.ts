@@ -4,24 +4,30 @@ type Primitive = {
   number: number;
 };
 
-type GetOptionalKeys<T extends Record<PropertyKey, { optional?: boolean }>> =
-  keyof {
-    [K in keyof T as T[K] extends { optional: true } ? K : never]: K;
-  };
+type ValidationSchema = Record<
+  PropertyKey,
+  { type: string; properties?: ValidationSchema }
+>;
 
-type MapSchema<
-  T extends Record<PropertyKey, { type: string; optional?: boolean }>,
-> = {
-  [K in keyof T]: T[K]['type'] extends keyof Primitive
-    ? Primitive[T[K]['type']]
-    : string;
+type GetObjectType<T extends ValidationSchema> = {
+  [P in keyof T]: T['optional'] extends true
+    ? GetType<T, P> | undefined
+    : GetType<T, P>;
 };
+
+type GetType<
+  T extends ValidationSchema,
+  K extends keyof T,
+> = T[K]['type'] extends keyof Primitive
+  ? Primitive[T[K]['type']]
+  : T[K]['properties'] extends ValidationSchema
+  ? GetObjectType<T[K]['properties']>
+  : string;
 
 export type DtoFromSchema<
   T extends Record<PropertyKey, { type: string; optional?: boolean }>,
-  _OptionalKeys extends keyof T = GetOptionalKeys<T>,
-> = MapSchema<T> extends infer R
-  ? _OptionalKeys extends keyof R
-    ? Partial<Pick<R, _OptionalKeys>> & Omit<R, _OptionalKeys>
-    : never
-  : never;
+> = {
+  [K in keyof T]: T[K]['optional'] extends true
+    ? GetType<T, K> | undefined
+    : GetType<T, K>;
+};
