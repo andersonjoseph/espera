@@ -1,8 +1,10 @@
 import FastestValidator from 'fastest-validator';
+import { ObjectId } from 'mongodb';
 import { DtoFromSchema } from '../interfaces';
 
 const schema = {
   email: { type: 'email' },
+  waitlist: { type: 'objectID', ObjectID: ObjectId },
   name: { type: 'string', min: 2, max: 5, optional: true },
   referredBy: { type: 'email', optional: true },
 } as const;
