@@ -24,7 +24,7 @@ import {
 } from './updateWaitlist.dto';
 
 @Controller('api/waitlists')
-export class WaitlistsController {
+export class WaitlistController {
   constructor(private readonly waitlistsService: WaitlistsService) {}
 
   @Post()
