@@ -100,6 +100,7 @@ export class UsersService {
 
     const newUserData = {
       ...input,
+      waitlist: new ObjectId(input.waitlist),
       position,
       date: new Date(),
       referrers: 0,
