@@ -32,3 +32,6 @@ export const waitlistResultMock = {
   date: '2022-05-11T22:13:28.249Z',
   _id: '627c35084252f301edf7c44f',
 };
+
+export const userRepositoryMock = repositoryMock(userResultMock);
+export const waitlistRepositoryMock = repositoryMock(waitlistResultMock);
