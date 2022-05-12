@@ -9,6 +9,7 @@ const userSchema = schema({
   referrers: types.number({ required: true, minimum: 0 }),
   verified: types.boolean({ required: true }),
   referredBy: types.string(),
+  waitlist: types.objectId({ required: true }),
 });
 
 export const User = createModel('users', userSchema);
