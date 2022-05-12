@@ -20,6 +20,7 @@ export const userResultMock = {
   date: '2022-05-04T21:59:55.718Z',
   referrers: 0,
   verified: false,
+  waitlist: '627c35084252f301edf7c44f',
 };
 
 export const waitlistResultMock = {
