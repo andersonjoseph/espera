@@ -69,6 +69,7 @@ describe('users', () => {
       expect(res.body.records[0]).toHaveProperty('date');
       expect(res.body.records[0]).toHaveProperty('referrers');
       expect(res.body.records[0]).toHaveProperty('verified');
+      expect(res.body.records[0]).toHaveProperty('waitlist');
     });
 
     it('should return error 400 if page is not a valid number', async () => {
@@ -97,6 +98,7 @@ describe('users', () => {
       expect(res.body).toHaveProperty('date');
       expect(res.body).toHaveProperty('referrers');
       expect(res.body).toHaveProperty('verified');
+      expect(res.body).toHaveProperty('waitlist');
     });
 
     it('should return status 400 if id is not an objectId', async () => {
@@ -134,6 +136,7 @@ describe('users', () => {
       let newUser: Record<string, string | number | boolean> = {
         email: 'andersonjuega@gmail.com',
         name: 'ander',
+        waitlist: '627c35084252f301edf7c44f',
       };
 
       let res = await supertest(app.getHttpServer())
@@ -145,6 +148,7 @@ describe('users', () => {
       newUser = {
         email: 'andersonjuega@gmail.com',
         name: 'ander',
+        waitlist: '627c35084252f301edf7c44f',
         referredBy: 'andersonjuega@gmail.com',
       };
 
@@ -162,6 +166,7 @@ describe('users', () => {
       const newUser = {
         email: 'andersonjuega@gmail.com',
         name: 'ander',
+        waitlist: '627c35084252f301edf7c44f',
       };
 
       const res = await supertest(app.getHttpServer())
