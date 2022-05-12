@@ -16,8 +16,8 @@ import {
   createWaitlistDto,
   createWaitlistValidator,
 } from './createWaitlist.dto';
-import { FastestValidatorPipe } from 'src/FastestValidatorPipe';
-import { objectIdValidator } from 'src/common';
+import { FastestValidatorPipe } from '../FastestValidatorPipe';
+import { objectIdValidator } from '../common';
 import {
   updateWaitlistValidator,
   updateWaitlistDto,
