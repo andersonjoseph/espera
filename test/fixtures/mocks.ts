@@ -22,15 +22,13 @@ export const userResultMock = {
   verified: false,
 };
 
-export const userRepositoryMock = {
-  find: jest.fn().mockResolvedValue([userResultMock]),
-  findOne: jest.fn().mockResolvedValue(userResultMock),
-  findOneAndUpdate: jest.fn().mockResolvedValue(userResultMock),
-  findOneAndDelete: jest.fn().mockResolvedValue(userResultMock),
-  insertOne: jest.fn().mockResolvedValue(userResultMock),
-  aggregate: jest.fn().mockResolvedValue([userResultMock]),
-  findById: jest.fn().mockResolvedValue(userResultMock),
-  deleteOne: jest.fn().mockResolvedValue(undefined),
-  updateMany: jest.fn().mockResolvedValue(undefined),
-  countDocuments: jest.fn().mockResolvedValue(10),
+export const waitlistResultMock = {
+  name: 'lista',
+  options: {
+    userSkips: 1,
+    sendEmails: true,
+    verifyEmails: true,
+  },
+  date: '2022-05-11T22:13:28.249Z',
+  _id: '627c35084252f301edf7c44f',
 };
