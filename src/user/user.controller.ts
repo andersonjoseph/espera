@@ -11,7 +11,7 @@ import {
   Patch,
   Post,
   Query,
-	UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import User from './user.model';
 import { UsersService } from './user.service';
@@ -26,7 +26,7 @@ import {
 } from '../common';
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
 import { WaitlistsService } from '../waitlist/waitlist.service';
-import {AuthGuard} from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/users')
 export class UsersController {

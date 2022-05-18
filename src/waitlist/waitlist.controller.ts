@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { PaprRepositoryResult } from 'src/papr';
 import { WaitlistsService } from './waitlist.service';
@@ -22,7 +23,9 @@ import {
   updateWaitlistValidator,
   updateWaitlistDto,
 } from './updateWaitlist.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('api/waitlists')
 export class WaitlistController {
   constructor(private readonly waitlistsService: WaitlistsService) {}
