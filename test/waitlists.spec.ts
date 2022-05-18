@@ -1,39 +1,13 @@
 import supertest from 'supertest';
-import { CacheModule, CACHE_MANAGER, INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { getPaprRepositoryToken, PaprRepository } from '../src/papr';
-import { WaitlistController } from '../src/waitlist/waitlist.controller';
-import { WaitlistsService } from '../src/waitlist/waitlist.service';
-import Waitlist from '../src/waitlist/waitlist.model';
+import { INestApplication } from '@nestjs/common';
 import { waitlistRepositoryMock, waitlistResultMock } from './fixtures/mocks';
+import { WaitlistModuleMock } from './fixtures/modules/waitlistModule';
 
 describe('waitlists', () => {
   let app: INestApplication;
 
-  function serviceFactory(
-    waitlistRepository: PaprRepository<typeof Waitlist>,
-  ): WaitlistsService {
-    return new WaitlistsService(waitlistRepository);
-  }
-
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [CacheModule.register()],
-      controllers: [WaitlistController],
-      providers: [
-        {
-          provide: WaitlistsService,
-          useFactory: serviceFactory,
-          inject: [getPaprRepositoryToken(Waitlist), CACHE_MANAGER],
-        },
-        {
-          provide: getPaprRepositoryToken(Waitlist),
-          useValue: waitlistRepositoryMock,
-        },
-      ],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
+    app = (await WaitlistModuleMock.compile()).createNestApplication();
 
     await app.init();
   });
