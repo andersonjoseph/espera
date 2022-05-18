@@ -239,7 +239,7 @@ describe('users', () => {
     });
   });
 
-  describe('/users/:id (POST)', () => {
+  describe('/users/:id (PATCH)', () => {
     it('should return updated object', async () => {
       // update email
       let newUser: Record<string, string | number | boolean> = {
