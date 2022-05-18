@@ -2,6 +2,7 @@ import { CacheModule, Module } from '@nestjs/common';
 import { WaitlistModule } from './waitlist/waitlist.module';
 import { UserModule } from './user/user.module';
 import { PaprModule } from './papr';
+import { AuthzModule } from './authz/authz.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PaprModule } from './papr';
       connectionString: process.env.MONGO_URL ?? 'no_uri',
       models: 'src/**/*.model.ts',
     }),
+    AuthzModule,
   ],
 })
 export class AppModule {}
