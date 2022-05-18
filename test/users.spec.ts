@@ -1,6 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import supertest from 'supertest';
-import { userRepositoryMock, userResultMock } from './fixtures/mocks';
+import {
+  userRepositoryMock,
+  userResultMock,
+  waitlistRepositoryMock,
+  waitlistResultMock,
+} from './fixtures/mocks';
 import { UserModuleMock } from './fixtures/modules/userModule';
 
 describe('users', () => {
@@ -146,6 +151,28 @@ describe('users', () => {
         .send(newUser);
 
       expect(res.status).toBe(409);
+    });
+
+    it('should return 409 if wailist does not exist', async () => {
+      // mock existing waitlist as null
+      waitlistRepositoryMock.findOne = jest.fn().mockResolvedValue(null);
+
+      const newUser = {
+        email: 'andersonjuega@gmail.com',
+        name: 'ander',
+        waitlist: '627c35084252f301edf7c44f',
+      };
+
+      const res = await supertest(app.getHttpServer())
+        .post('/api/users')
+        .send(newUser);
+
+      expect(res.status).toBe(409);
+
+      // reset mock
+      waitlistRepositoryMock.findOne = jest
+        .fn()
+        .mockResolvedValue(waitlistResultMock);
     });
 
     it('should return 400 if body is not well formatted', async () => {
