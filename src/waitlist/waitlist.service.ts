@@ -64,7 +64,7 @@ export class WaitlistsService {
   async getById(
     id: string,
   ): Promise<PaprRepositoryResult<typeof Waitlist> | null> {
-    const waitlist = await this.waitlistRepository.findOne({ id });
+    const waitlist = await this.waitlistRepository.findById(id);
 
     return waitlist;
   }
