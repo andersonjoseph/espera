@@ -8,5 +8,6 @@ import { WaitlistsService } from './waitlist.service';
   imports: [PaprModule.forFeature(Waitlist)],
   controllers: [WaitlistController],
   providers: [WaitlistsService],
+  exports: [WaitlistsService],
 })
 export class WaitlistModule {}
