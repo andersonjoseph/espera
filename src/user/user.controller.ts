@@ -23,10 +23,14 @@ import {
   PaginatedResult,
 } from '../common';
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
+import { WaitlistsService } from '../waitlist/waitlist.service';
 
 @Controller('api/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly waitlistService: WaitlistsService,
+  ) {}
 
   @Get()
   async findAll(
