@@ -1,5 +1,6 @@
 import {
   Body,
+  ConflictException,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -70,6 +71,10 @@ export class UsersController {
   async create(
     @Body(new FastestValidatorPipe(createUserValidator)) input: createUserDto,
   ): Promise<PaprRepositoryResult<typeof User>> {
+    const waitlist = await this.waitlistService.getById(input.waitlist);
+
+    if (!waitlist) throw new ConflictException('Waitlist does not exist');
+
     const user = await this.usersService.create(input);
 
     return user;
