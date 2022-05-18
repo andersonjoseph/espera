@@ -51,7 +51,7 @@ describe('waitlists', () => {
 
     it('should return 404 if a waitlist does not exist', async () => {
       // mock not found waitlist;
-      waitlistRepositoryMock.findOne = jest.fn().mockResolvedValue(null);
+      waitlistRepositoryMock.findById = jest.fn().mockResolvedValue(null);
       const res = await supertest(app.getHttpServer()).get(
         '/api/waitlists/627c35083252f301edf7c44f',
       );

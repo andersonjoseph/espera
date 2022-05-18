@@ -155,7 +155,7 @@ describe('users', () => {
 
     it('should return 409 if wailist does not exist', async () => {
       // mock existing waitlist as null
-      waitlistRepositoryMock.findOne = jest.fn().mockResolvedValue(null);
+      waitlistRepositoryMock.findById = jest.fn().mockResolvedValue(null);
 
       const newUser = {
         email: 'andersonjuega@gmail.com',
