@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+	UseGuards,
 } from '@nestjs/common';
 import User from './user.model';
 import { UsersService } from './user.service';
@@ -25,6 +26,7 @@ import {
 } from '../common';
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
 import { WaitlistsService } from '../waitlist/waitlist.service';
+import {AuthGuard} from '@nestjs/passport';
 
 @Controller('api/users')
 export class UsersController {
@@ -80,6 +82,7 @@ export class UsersController {
     return user;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
   @HttpCode(204)
   async remove(
@@ -88,6 +91,7 @@ export class UsersController {
     await this.usersService.remove(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   async update(
     @Param('id', new FastestValidatorPipe(objectIdValidator)) id: string,
