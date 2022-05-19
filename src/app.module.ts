@@ -3,6 +3,8 @@ import { WaitlistModule } from './waitlist/waitlist.module';
 import { UserModule } from './user/user.module';
 import { PaprModule } from './papr';
 import { AuthzModule } from './authz/authz.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -17,6 +19,9 @@ import { AuthzModule } from './authz/authz.module';
       models: 'src/**/*.model.ts',
     }),
     AuthzModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', 'build')
+    })
   ],
 })
 export class AppModule {}
