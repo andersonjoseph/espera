@@ -1,3 +1,9 @@
+import {
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
+
 const repositoryMock = (
   result: Record<string, unknown>,
 ): Record<string, jest.Mock> => ({
@@ -36,3 +42,12 @@ export const waitlistResultMock = {
 
 export const userRepositoryMock = repositoryMock(userResultMock);
 export const waitlistRepositoryMock = repositoryMock(waitlistResultMock);
+
+export const jwtGuardMockFactory = (): Partial<CanActivate> => ({
+  canActivate: (/*context: ExecutionContext*/): boolean => {
+    //const req = context.switchToHttp().getRequest();
+    //if (!req.header('Authorization')) throw new UnauthorizedException();
+
+    return true;
+  },
+});
