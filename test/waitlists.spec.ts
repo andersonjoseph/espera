@@ -1,13 +1,22 @@
 import supertest from 'supertest';
 import { INestApplication } from '@nestjs/common';
-import { waitlistRepositoryMock, waitlistResultMock } from './fixtures/mocks';
+import {
+  jwtGuardMockFactory,
+  waitlistRepositoryMock,
+  waitlistResultMock,
+} from './fixtures/mocks';
 import { WaitlistModuleMock } from './fixtures/modules/waitlistModule';
+import { AuthGuard } from '@nestjs/passport';
 
 describe('waitlists', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
-    app = (await WaitlistModuleMock.compile()).createNestApplication();
+    app = (
+      await WaitlistModuleMock.overrideGuard(AuthGuard('jwt'))
+        .useFactory({ factory: jwtGuardMockFactory })
+        .compile()
+    ).createNestApplication();
 
     await app.init();
   });

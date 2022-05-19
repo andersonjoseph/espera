@@ -1,10 +1,12 @@
 import { INestApplication } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import supertest from 'supertest';
 import {
   userRepositoryMock,
   userResultMock,
   waitlistRepositoryMock,
   waitlistResultMock,
+  jwtGuardMockFactory,
 } from './fixtures/mocks';
 import { UserModuleMock } from './fixtures/modules/userModule';
 
@@ -12,7 +14,11 @@ describe('users', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
-    app = (await UserModuleMock.compile()).createNestApplication();
+    app = (
+      await UserModuleMock.overrideGuard(AuthGuard('jwt'))
+        .useFactory({ factory: jwtGuardMockFactory })
+        .compile()
+    ).createNestApplication();
 
     await app.init();
   });
