@@ -159,11 +159,10 @@ export class UsersService {
         },
       );
 
-      const lastUser = await this.cacheManager.get<
-        PaprRepositoryResult<typeof User>
-      >('lastUser');
+      const lastUser = await this.getLastUser();
 
-      if (lastUser?._id === deletedUser._id) this.cacheManager.del('lastUser');
+      if (lastUser?._id.toString() === deletedUser._id.toString())
+        await this.cacheManager.del('lastUser');
     }
   }
 
@@ -186,6 +185,11 @@ export class UsersService {
       { _id: new ObjectId(id) },
       { $set: input },
     );
+
+    const lastUser = await this.getLastUser();
+
+    if (lastUser?._id.toString() === updatedUser?._id.toString())
+      await this.cacheManager.del('lastUser');
 
     return updatedUser;
   }
