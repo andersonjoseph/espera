@@ -1,5 +1,5 @@
 import FastestValidator from 'fastest-validator';
-import {ObjectId} from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { DtoFromSchema } from '../interfaces';
 
 const schema = {
