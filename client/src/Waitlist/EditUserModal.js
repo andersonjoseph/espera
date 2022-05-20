@@ -21,6 +21,7 @@ export function EditUserModal({ user, refreshTable }) {
     setLoading(true);
     data.position = Number(data.position);
     data.referrers = Number(data.referrers);
+    if (data.name === '') delete data.name;
 
     await updateUser(user._id, data);
     clear(['users', params.id]);
