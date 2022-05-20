@@ -20,8 +20,8 @@ import { join } from 'path';
     }),
     AuthzModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client', 'build')
-    })
+      rootPath: join(__dirname, '..', 'client', 'build'),
+    }),
   ],
 })
 export class AppModule {}
