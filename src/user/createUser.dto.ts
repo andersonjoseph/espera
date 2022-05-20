@@ -6,7 +6,7 @@ const schema = {
   $$strict: 'remove',
   email: { type: 'email' },
   waitlist: { type: 'objectID', ObjectID: ObjectId },
-  name: { type: 'string', min: 2, max: 5, optional: true },
+  name: { type: 'string', min: 2, max: 50, optional: true },
   referredBy: { type: 'email', optional: true },
 } as const;
 

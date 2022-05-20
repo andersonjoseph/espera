@@ -4,7 +4,7 @@ import { DtoFromSchema } from '../interfaces';
 const schema = {
   $$strict: 'remove',
   email: { type: 'email', optional: true },
-  name: { type: 'string', min: 2, max: 5, optional: true },
+  name: { type: 'string', min: 2, max: 50, optional: true },
   referredBy: { type: 'email', optional: true },
   position: { type: 'number', min: 1, optional: true },
   referrers: { type: 'number', min: 1, optional: true },
