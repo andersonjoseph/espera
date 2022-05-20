@@ -42,7 +42,9 @@ export class UsersController {
   ): Promise<PaginatedResult<typeof User>> {
     const perPage = this.usersService.perPage;
     const [users, totalCount] = await Promise.all([
-      await this.usersService.get(page),
+      waitlist
+        ? await this.usersService.getByWaitlist(waitlist, page)
+        : await this.usersService.get(page),
       await this.usersService.getCount(),
     ]);
 

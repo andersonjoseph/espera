@@ -49,6 +49,24 @@ export class UsersService {
     return users;
   }
 
+  async getByWaitlist(
+    waitlist: string,
+    page: PositiveNumber = 1 as PositiveNumber,
+  ): Promise<PaprRepositoryResult<typeof User>[]> {
+    const users = await this.userRepository.find(
+      {
+        waitlist: new ObjectId(waitlist),
+      },
+      {
+        limit: this.perPage,
+        skip: (page - 1) * this.perPage,
+        sort: { position: 1 },
+      },
+    );
+
+    return users;
+  }
+
   async getByEmail(
     email: string,
   ): Promise<PaprRepositoryResult<typeof User> | null> {
