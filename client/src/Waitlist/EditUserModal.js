@@ -1,14 +1,29 @@
 import Modal from 'react-modal';
+import { clear } from 'suspend-react';
 import { useModalStore, selectors } from '../stateStore';
+import { useUsersApi } from '../api/useUsersApi';
 import { useForm } from 'react-hook-form';
+import { useAlert } from 'react-alert';
+import { useRoute } from 'wouter';
 
-export function EditUserModal() {
+export function EditUserModal({ user, refreshTable }) {
+  const [_, params] = useRoute('/waitlist/:id');
   const isOpen = useModalStore(selectors.modalIsOpen);
   const closeModal = useModalStore(selectors.closeModal);
   const { register, handleSubmit } = useForm();
 
-  function onSubmit(data) {
-    console.log(data);
+  const { updateUser } = useUsersApi();
+  const alert = useAlert();
+
+  async function onSubmit(data) {
+    data.position = Number(data.position);
+    data.referrers = Number(data.referrers);
+
+    await updateUser(user._id, data);
+    clear(['users', params.id]);
+    refreshTable();
+
+    alert.success('Usuario editado con éxito');
   }
 
   return (
@@ -31,6 +46,7 @@ export function EditUserModal() {
         <div className="mb-5">
           <label className="font-medium text-slate-900 block">Posición</label>
           <input
+            defaultValue={user.position}
             className="border border-gray-300 p-2 rounded-lg w-full block"
             type="number"
             placeholder="1"
@@ -42,10 +58,10 @@ export function EditUserModal() {
         <div className="mb-5">
           <label className="font-medium text-slate-900 block">Nombre</label>
           <input
+            defaultValue={user.name}
             className="border border-gray-300 p-2 rounded-lg w-full block"
             type="text"
             placeholder="John Doe"
-            required
             {...register('name')}
           />
         </div>
@@ -53,6 +69,7 @@ export function EditUserModal() {
         <div className="mb-5">
           <label className="font-medium text-slate-900 block">Email</label>
           <input
+            defaultValue={user.email}
             className="border border-gray-300 p-2 rounded-lg w-full block"
             type="email"
             placeholder="usuario@email.com"
@@ -62,19 +79,9 @@ export function EditUserModal() {
         </div>
 
         <div className="mb-5">
-          <label className="font-medium text-slate-900 block">Fecha</label>
-          <input
-            className="border border-gray-300 p-2 rounded-lg w-full block"
-            type="date"
-            placeholder="usuario@email.com"
-            required
-            {...register('date')}
-          />
-        </div>
-
-        <div className="mb-5">
           <label className="font-medium text-slate-900 block">Referidos</label>
           <input
+            defaultValue={user.referrers}
             className="border border-gray-300 p-2 rounded-lg w-full block"
             type="number"
             placeholder="1"
