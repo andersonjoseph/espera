@@ -25,9 +25,14 @@ type GetType<
   : string;
 
 export type DtoFromSchema<
-  T extends Record<PropertyKey, { type: string; optional?: boolean }>,
+  T extends Record<PropertyKey, { type: string; optional?: boolean } | string>,
 > = {
-  [K in keyof T]: T[K]['optional'] extends true
-    ? GetType<T, K> | undefined
-    : GetType<T, K>;
+  [K in keyof T as K extends `$$${infer Flag}` ? never : K]: T extends Record<
+    PropertyKey,
+    { type: string; optional?: boolean }
+  >
+    ? T[K]['optional'] extends true
+      ? GetType<T, K> | undefined
+      : GetType<T, K>
+    : never;
 };
