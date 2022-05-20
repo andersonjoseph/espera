@@ -155,7 +155,7 @@ export class UsersService {
           position: { $gte: deletedUser.position },
         },
         {
-          $inc: { position: 1 },
+          $inc: { position: -1 },
         },
       );
 
