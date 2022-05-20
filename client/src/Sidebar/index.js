@@ -1,4 +1,5 @@
 import { Link } from 'wouter';
+import { selectors, useWaitlistStore } from '../stateStore';
 
 function SidebarList(props) {
   return <ul className="mb-10">{props.children}</ul>;
@@ -16,6 +17,8 @@ function SidebarItem(props) {
 }
 
 export function Sidebar() {
+  const waitlists = useWaitlistStore(selectors.waitlists);
+
   return (
     <aside className="p-4 col-span-2 bg-slate-100 border-r-2 min-h-screen">
       <div className="flex items-center mb-5">
@@ -31,16 +34,14 @@ export function Sidebar() {
       <h2 className="text-md font-medium text-slate-700 mb-5">Waitlists</h2>
 
       <SidebarList>
-        <SidebarItem
-          link="/waitlist/1"
-          title="Crear Nueva"
-          icon="/images/list.svg"
-        />
-        <SidebarItem
-          link="/waitlist/2"
-          title="Crear Nueva"
-          icon="/images/list.svg"
-        />
+        {waitlists.map((waitlist, i) => (
+          <SidebarItem
+            key={`sidebar-${i}`}
+            link={`/waitlist/${waitlist._id}`}
+            title={waitlist.name}
+            icon="/images/list.svg"
+          />
+        ))}
       </SidebarList>
     </aside>
   );

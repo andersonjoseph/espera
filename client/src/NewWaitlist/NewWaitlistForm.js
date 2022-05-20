@@ -1,4 +1,9 @@
+import { useState } from 'react';
+import { useAlert } from 'react-alert';
 import { useForm } from 'react-hook-form';
+import { useLocation } from 'wouter';
+import { useWaitlistApi } from '../api/useWaitlistApi';
+import { selectors, useWaitlistStore } from '../stateStore';
 
 function FieldContent(props) {
   return (
@@ -22,10 +27,26 @@ function FormField(props) {
 }
 
 export function NewWaitlistForm() {
+  const [location, setLocation] = useLocation();
   const { register, handleSubmit } = useForm();
+  const { createWaitlist } = useWaitlistApi();
+  const [loading, setLoading] = useState(false);
+  const alert = useAlert();
 
-  function onSubmit(data) {
-    console.log(data);
+  const addWaitlistStore = useWaitlistStore(selectors.addWaitlist);
+
+  async function onSubmit(data) {
+    setLoading(true);
+
+    data.options.userSkips = Number(data.options.userSkips);
+
+    const res = await createWaitlist(data);
+    addWaitlistStore(res);
+    setLoading(false);
+
+    alert.success('Waitlist creada con éxito');
+
+    setLocation(`/waitlist/${res._id}`);
   }
 
   return (
@@ -58,7 +79,7 @@ export function NewWaitlistForm() {
             type="number"
             placeholder="3"
             required
-            {...register('skipSpots')}
+            {...register('options.userSkips')}
           />
         </FieldInput>
       </FormField>
@@ -75,7 +96,7 @@ export function NewWaitlistForm() {
             type="checkbox"
             value=""
             id="flexCheckDefault"
-            {...register('sendEmail')}
+            {...register('options.sendEmails')}
           />
         </FieldInput>
       </FormField>
@@ -89,13 +110,16 @@ export function NewWaitlistForm() {
             type="checkbox"
             value=""
             id="flexCheckDefault"
-            {...register('verifyEmail')}
+            {...register('options.verifyEmails')}
           />
         </FieldInput>
       </FormField>
 
       <div className="text-right">
-        <button className="bg-indigo-700 hover:bg-indigo-900 text-white font-medium px-8 py-4 rounded-lg">
+        <button
+          className="bg-indigo-700 hover:bg-indigo-900 text-white font-medium px-8 py-4 rounded-lg disabled:opacity-75"
+          disabled={loading}
+        >
           Crear Waitlist
         </button>
       </div>
