@@ -170,6 +170,17 @@ export class UsersService {
     id: string,
     input: updateUserDto,
   ): Promise<PaprRepositoryResult<typeof User> | null> {
+
+
+    const updatedUser = await this.userRepository.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: {
+	...input,
+	waitlist: new ObjectId(input.waitlist)
+      } },
+    );
+    if(!updatedUser) return updatedUser;
+
     if (input.position) {
       await this.userRepository.updateMany(
         {
@@ -180,11 +191,6 @@ export class UsersService {
         },
       );
     }
-
-    const updatedUser = await this.userRepository.findOneAndUpdate(
-      { _id: new ObjectId(id) },
-      { $set: input },
-    );
 
     const lastUser = await this.getLastUser();
 
