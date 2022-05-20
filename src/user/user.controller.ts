@@ -39,6 +39,12 @@ export class UsersController {
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParsePositiveNumberPipe)
     page: PositiveNumber,
+    @Query(
+      'waitlist',
+      new DefaultValuePipe(null),
+      new FastestValidatorPipe(objectIdValidator, { optional: true }),
+    )
+    waitlist: string | null,
   ): Promise<PaginatedResult<typeof User>> {
     const perPage = this.usersService.perPage;
     const [users, totalCount] = await Promise.all([
