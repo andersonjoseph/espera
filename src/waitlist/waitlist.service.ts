@@ -48,7 +48,7 @@ export class WaitlistsService {
     input: updateWaitlistDto,
   ): Promise<PaprRepositoryResult<typeof Waitlist> | null> {
     const newWaitlist = await this.waitlistRepository.findOneAndUpdate(
-      { id: new ObjectId(id) },
+      { _id: new ObjectId(id) },
       { $set: input },
     );
 
@@ -70,6 +70,6 @@ export class WaitlistsService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.waitlistRepository.deleteOne(new ObjectId(id));
+    await this.waitlistRepository.deleteOne({ _id: new ObjectId(id) });
   }
 }
