@@ -7,7 +7,7 @@ const schema = {
   name: { type: 'string', min: 2, max: 50, optional: true },
   referredBy: { type: 'email', optional: true },
   position: { type: 'number', min: 1, optional: true },
-  referrers: { type: 'number', min: 1, optional: true },
+  referrers: { type: 'number', min: 0, optional: true },
   verified: { type: 'boolean', optional: true },
 } as const;
 
