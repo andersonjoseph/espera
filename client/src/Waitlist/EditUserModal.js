@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Modal from 'react-modal';
 import { clear } from 'suspend-react';
 import { useModalStore, selectors } from '../stateStore';
@@ -11,11 +12,13 @@ export function EditUserModal({ user, refreshTable }) {
   const isOpen = useModalStore(selectors.modalIsOpen);
   const closeModal = useModalStore(selectors.closeModal);
   const { register, handleSubmit } = useForm();
+  const [loading, setLoading] = useState(false);
 
   const { updateUser } = useUsersApi();
   const alert = useAlert();
 
   async function onSubmit(data) {
+    setLoading(true);
     data.position = Number(data.position);
     data.referrers = Number(data.referrers);
 
@@ -24,6 +27,7 @@ export function EditUserModal({ user, refreshTable }) {
     refreshTable();
 
     alert.success('Usuario editado con éxito');
+    setLoading(false);
   }
 
   return (
@@ -91,7 +95,10 @@ export function EditUserModal({ user, refreshTable }) {
         </div>
 
         <div className="text-right mt-10">
-          <button className="bg-indigo-700 hover:bg-indigo-900 text-white font-medium px-8 py-4 rounded-lg">
+          <button
+            disabled={loading}
+            className="bg-indigo-700 hover:bg-indigo-900 text-white font-medium px-8 py-4 rounded-lg disabled:opacity-75"
+          >
             Editar Usuario
           </button>
         </div>
