@@ -194,7 +194,7 @@ export class UsersService {
 
     const lastUser = await this.getLastUser();
 
-    if (lastUser?._id.toString() === updatedUser?._id.toString())
+    if (lastUser?._id.toString() === updatedUser._id.toString())
       await this.cacheManager.del('lastUser');
 
     return updatedUser;
