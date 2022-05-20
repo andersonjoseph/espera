@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { DtoFromSchema } from '../interfaces';
 
 const schema = {
+  $$strict: 'remove',
   email: { type: 'email' },
   waitlist: { type: 'objectID', ObjectID: ObjectId },
   name: { type: 'string', min: 2, max: 5, optional: true },

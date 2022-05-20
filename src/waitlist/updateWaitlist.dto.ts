@@ -2,6 +2,7 @@ import FastestValidator from 'fastest-validator';
 import { DtoFromSchema } from '../interfaces';
 
 const schema = {
+  $$strict: 'remove',
   name: { type: 'string', min: 2, max: 64, optional: true },
   options: {
     type: 'object',
