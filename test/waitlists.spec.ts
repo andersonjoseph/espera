@@ -224,6 +224,11 @@ describe('waitlists', () => {
     it('should update and return the updated waitlist', async () => {
       const updatedData = {
         name: 'new waitlist name',
+        options: {
+          userSkips: 2,
+          sendEmails: true,
+          verifyEmails: true,
+        },
       };
 
       const res = await supertest(app.getHttpServer())
