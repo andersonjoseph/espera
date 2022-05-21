@@ -6,11 +6,10 @@ const schema = {
   name: { type: 'string', min: 2, max: 64, optional: true },
   options: {
     type: 'object',
-    optional: true,
     properties: {
-      userSkips: { type: 'number', positive: true, optional: true },
-      sendEmails: { type: 'boolean', optional: true },
-      verifyEmails: { type: 'boolean', optional: true },
+      userSkips: { type: 'number', positive: true },
+      sendEmails: { type: 'boolean' },
+      verifyEmails: { type: 'boolean' },
     },
   },
 } as const;
