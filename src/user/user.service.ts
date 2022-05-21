@@ -170,6 +170,39 @@ export class UsersService {
     }
   }
 
+  async addReferrer(id: string): Promise<void> {
+    await this.userRepository.updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $inc: {
+          referrers: 1,
+        },
+      },
+    );
+  }
+
+  async skip(
+    user: PaprRepositoryResult<typeof User>,
+    positions: number,
+  ): Promise<void> {
+    if (user.position === 1) return;
+
+    let newPosition = user.position - positions;
+
+    if (newPosition <= 0) newPosition = 1;
+
+    this.update(user._id.toString(), {
+      name: user.name,
+      email: user.email,
+      verified: user.verified,
+      referredBy: user.referredBy,
+      referrers: user.referrers,
+      waitlist: user.waitlist.toString(),
+
+      position: newPosition,
+    });
+  }
+
   async update(
     id: string,
     input: updateUserDto,

@@ -80,12 +80,31 @@ export class UsersController {
   @Post()
   async create(
     @Body(new FastestValidatorPipe(createUserValidator)) input: createUserDto,
+    @Query(
+      'ref',
+      new DefaultValuePipe(null),
+      new FastestValidatorPipe(objectIdValidator, { optional: true }),
+    )
+    referrer: string | null,
   ): Promise<PaprRepositoryResult<typeof User>> {
     const waitlist = await this.waitlistService.getById(input.waitlist);
-
     if (!waitlist) throw new ConflictException('Waitlist does not exist');
 
+    let userReferrer: PaprRepositoryResult<typeof User> | null = null;
+
+    if (referrer) {
+      const user = await this.usersService.getById(referrer);
+      if (!user) throw new ConflictException('Referrer does not exist');
+      userReferrer = user;
+      input.referredBy = user._id.toString();
+    }
+
     const user = await this.usersService.create(input);
+
+    if (referrer && userReferrer) {
+      await this.usersService.addReferrer(referrer);
+      await this.usersService.skip(userReferrer, waitlist.options.userSkips);
+    }
 
     return user;
   }
