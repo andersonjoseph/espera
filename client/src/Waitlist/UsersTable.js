@@ -46,6 +46,7 @@ export function UsersTable() {
   const [showEditButton, setShowEditButton] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [clearTable, setClearTable] = useState(false);
 
   const [_, params] = useRoute('/waitlist/:id');
 
@@ -54,12 +55,20 @@ export function UsersTable() {
   const { getUsersByWaitlist, deleteUser } = useUsersApi();
 
   const openModal = useModalStore(selectors.openModal);
+  const closeModal = useModalStore(selectors.closeModal);
 
   const data = suspend(async () => {
     const res = await getUsersByWaitlist(params.id);
 
     return res;
   }, ['users', params.id]);
+
+  function onClearTable() {
+    setClearTable((clearTable) => !clearTable);
+    setSelectedUsers([]);
+    setShowBottomBar(false);
+    closeModal();
+  }
 
   function handleChange(ev) {
     setShowBottomBar(ev.selectedCount >= 1);
@@ -96,15 +105,13 @@ export function UsersTable() {
         paginationTotalRows={data.totalCount}
         paginationComponentOptions={paginationComponentOptions}
         onSelectedRowsChange={handleChange}
+        clearSelectedRows={clearTable}
       />
 
       <span className="mb-20 block w-full bg-black" />
 
       {selectedUsers.length > 0 && (
-        <EditUserModal
-          refreshTable={() => setSelectedUsers([])}
-          user={selectedUsers[0]}
-        />
+        <EditUserModal clearTable={onClearTable} user={selectedUsers[0]} />
       )}
 
       {showBottomBar && (

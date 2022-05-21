@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useAlert } from 'react-alert';
 import { useRoute } from 'wouter';
 
-export function EditUserModal({ user, refreshTable }) {
+export function EditUserModal({ user, clearTable }) {
   const [_, params] = useRoute('/waitlist/:id');
   const isOpen = useModalStore(selectors.modalIsOpen);
   const closeModal = useModalStore(selectors.closeModal);
@@ -26,7 +26,7 @@ export function EditUserModal({ user, refreshTable }) {
 
     await updateUser(user._id, data);
     clear(['users', params.id]);
-    refreshTable();
+    clearTable();
 
     alert.success('Usuario editado con éxito');
     setLoading(false);
