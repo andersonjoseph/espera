@@ -4,35 +4,33 @@ type Primitive = {
   number: number;
 };
 
-type ValidationSchema = Record<
-  PropertyKey,
-  { type: string; properties?: ValidationSchema }
->;
-
-type GetObjectType<T extends ValidationSchema> = {
-  [P in keyof T]: T['optional'] extends true
-    ? GetType<T, P> | undefined
-    : GetType<T, P>;
+type SchemaWithoutFlags<T> = {
+  [K in keyof T as K extends `$$${infer Flag}` ? never : K]: T[K];
 };
 
-type GetType<
-  T extends ValidationSchema,
-  K extends keyof T,
-> = T[K]['type'] extends keyof Primitive
-  ? Primitive[T[K]['type']]
-  : T[K]['properties'] extends ValidationSchema
-  ? GetObjectType<T[K]['properties']>
+type ValidationSchema = {
+  type: string;
+  optional?: boolean;
+};
+
+type ValidationObjectSchema = {
+  type: 'object';
+  properties: Record<PropertyKey, ValidationSchema>;
+  optional?: boolean;
+};
+
+type GetType<T extends ValidationSchema> = T['type'] extends keyof Primitive
+  ? Primitive[T['type']]
   : string;
 
-export type DtoFromSchema<
-  T extends Record<PropertyKey, { type: string; optional?: boolean } | string>,
-> = {
-  [K in keyof T as K extends `$$${infer Flag}` ? never : K]: T extends Record<
-    PropertyKey,
-    { type: string; optional?: boolean }
-  >
+export type DtoFromSchema<T> = {
+  [K in keyof SchemaWithoutFlags<T>]: T[K] extends ValidationObjectSchema
     ? T[K]['optional'] extends true
-      ? GetType<T, K> | undefined
-      : GetType<T, K>
+      ? DtoFromSchema<T[K]['properties']> | undefined
+      : DtoFromSchema<T[K]['properties']>
+    : T[K] extends ValidationSchema
+    ? T[K]['optional'] extends true
+      ? GetType<T[K]> | undefined
+      : GetType<T[K]>
     : never;
 };
