@@ -114,7 +114,7 @@ describe('users', () => {
   describe('/users/ (POST)', () => {
     it('should create and return the created user', async () => {
       // mock existing user to null
-      userRepositoryMock.findOne = jest.fn().mockResolvedValue(null);
+      userRepositoryMock.find = jest.fn().mockResolvedValue([]);
 
       let newUser: Record<string, string | number | boolean> = {
         email: 'andersonjuega@gmail.com',
@@ -142,7 +142,7 @@ describe('users', () => {
       expect(res.status).toBe(201);
 
       // reset mock
-      userRepositoryMock.findOne = jest.fn().mockResolvedValue(userResultMock);
+      userRepositoryMock.find = jest.fn().mockResolvedValue([userResultMock]);
     });
 
     it('should return 409 if email already exists', async () => {

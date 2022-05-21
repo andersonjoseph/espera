@@ -69,8 +69,8 @@ export class UsersService {
 
   async getByEmail(
     email: string,
-  ): Promise<PaprRepositoryResult<typeof User> | null> {
-    const user = await this.userRepository.findOne({ email });
+  ): Promise<PaprRepositoryResult<typeof User>[]> {
+    const user = await this.userRepository.find({ email });
 
     return user;
   }
@@ -105,12 +105,16 @@ export class UsersService {
   private async insertUser(
     input: createUserDto,
   ): Promise<PaprRepositoryResult<typeof User>> {
-    const [existingUser, lastUser] = await Promise.all([
+    const [existingUsers, lastUser] = await Promise.all([
       this.getByEmail(input.email),
       this.getLastUser(),
     ]);
 
-    if (existingUser) {
+    if (
+      existingUsers.findIndex(
+        (user) => user.waitlist.toString() === input.waitlist,
+      ) >= 0
+    ) {
       throw new ConflictException('User already exists');
     }
 
