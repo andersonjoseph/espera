@@ -250,6 +250,7 @@ describe('users', () => {
       // update email
       let newUser: Record<string, string | number | boolean> = {
         email: 'andersonjuega@gmail.com',
+        waitlist: '6272f75b20545b275cd4b547',
       };
 
       let res = await supertest(app.getHttpServer())
@@ -268,6 +269,7 @@ describe('users', () => {
       // update name
       newUser = {
         name: 'ander',
+        waitlist: '6272f75b20545b275cd4b547',
       };
 
       res = await supertest(app.getHttpServer())

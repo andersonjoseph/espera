@@ -170,32 +170,61 @@ export class UsersService {
     id: string,
     input: updateUserDto,
   ): Promise<PaprRepositoryResult<typeof User> | null> {
-
+    const currentUser = await this.userRepository.findById(id);
+    if (!currentUser) return currentUser;
 
     const updatedUser = await this.userRepository.findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { $set: {
-	...input,
-	waitlist: new ObjectId(input.waitlist)
-      } },
+      {
+        $set: {
+          ...input,
+          waitlist: new ObjectId(input.waitlist),
+        },
+      },
     );
-    if(!updatedUser) return updatedUser;
-
-    if (input.position) {
-      await this.userRepository.updateMany(
-        {
-          position: { $gte: input.position },
-        },
-        {
-          $inc: { position: 1 },
-        },
-      );
-    }
+    if (!updatedUser) return updatedUser;
 
     const lastUser = await this.getLastUser();
 
     if (lastUser?._id.toString() === updatedUser._id.toString())
       await this.cacheManager.del('lastUser');
+
+    if (input.position && input.position !== currentUser.position) {
+      if (currentUser.position === 1) {
+        await this.userRepository.updateMany(
+          {
+            waitlist: new ObjectId(input.waitlist),
+            _id: { $ne: updatedUser._id },
+            position: { $lte: input.position },
+          },
+          {
+            $inc: { position: -1 },
+          },
+        );
+      } else if (input.position > currentUser.position) {
+        await this.userRepository.updateMany(
+          {
+            waitlist: new ObjectId(input.waitlist),
+            _id: { $ne: updatedUser._id },
+            position: { $gt: currentUser.position, $lte: input.position },
+          },
+          {
+            $inc: { position: -1 },
+          },
+        );
+      } else if (input.position < currentUser.position) {
+        await this.userRepository.updateMany(
+          {
+            waitlist: new ObjectId(input.waitlist),
+            _id: { $ne: updatedUser._id },
+            position: { $lt: currentUser.position, $gte: input.position },
+          },
+          {
+            $inc: { position: 1 },
+          },
+        );
+      }
+    }
 
     return updatedUser;
   }
