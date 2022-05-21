@@ -24,7 +24,7 @@ type GetType<T extends ValidationSchema> = T['type'] extends keyof Primitive
   : string;
 
 export type DtoFromSchema<T> = {
-  [K in keyof SchemaWithoutFlags<T>]: T[K] extends ValidationObjectSchema
+  -readonly [K in keyof SchemaWithoutFlags<T>]: T[K] extends ValidationObjectSchema
     ? T[K]['optional'] extends true
       ? DtoFromSchema<T[K]['properties']> | undefined
       : DtoFromSchema<T[K]['properties']>
