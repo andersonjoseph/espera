@@ -45,6 +45,7 @@ export function UsersTable() {
   const [showBottomBar, setShowBottomBar] = useState(false);
   const [showEditButton, setShowEditButton] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [_, params] = useRoute('/waitlist/:id');
 
@@ -77,10 +78,12 @@ export function UsersTable() {
     )
       return;
 
+    setLoading(true);
     await Promise.all(selectedUsers.map((user) => deleteUser(user._id)));
     clear(['users', params.id]);
     setSelectedUsers([]);
     alert.success('Usuarios eliminados correctamente');
+    setLoading(true);
   }
 
   return (
@@ -109,14 +112,16 @@ export function UsersTable() {
           <div className="justify-end flex gap-4">
             <button
               onClick={onDeleteUser}
-              className="bg-white-700 text-red-500 border border-red-500 font-medium px-4 py-2 rounded-lg"
+              className="bg-white-700 text-red-500 border border-red-500 font-medium px-4 py-2 rounded-lg disabled:opacity-75"
+              disabled={loading}
             >
               Eliminar Usuarios
             </button>
             {showEditButton && (
               <button
                 onClick={openModal}
-                className="bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg"
+                className="bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg disabled:opacity-75"
+                disabled={loading}
               >
                 Editar Usuario
               </button>
