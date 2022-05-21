@@ -194,18 +194,7 @@ export class UsersService {
       await this.cacheManager.del('lastUser');
 
     if (input.position && input.position !== currentUser.position) {
-      if (currentUser.position === 1) {
-        await this.userRepository.updateMany(
-          {
-            waitlist: new ObjectId(input.waitlist),
-            _id: { $ne: updatedUser._id },
-            position: { $lte: input.position },
-          },
-          {
-            $inc: { position: -1 },
-          },
-        );
-      } else if (input.position > currentUser.position) {
+      if (input.position > currentUser.position) {
         await this.userRepository.updateMany(
           {
             waitlist: new ObjectId(input.waitlist),
