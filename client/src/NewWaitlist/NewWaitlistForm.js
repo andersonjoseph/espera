@@ -90,6 +90,7 @@ export function NewWaitlistForm() {
             type="number"
             placeholder="3"
             required
+	    min={0}
             {...register('options.userSkips')}
           />
         </FieldInput>

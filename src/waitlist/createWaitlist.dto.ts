@@ -7,7 +7,7 @@ const schema = {
   options: {
     type: 'object',
     properties: {
-      userSkips: { type: 'number', positive: true },
+      userSkips: { type: 'number', min: 0 },
       sendEmails: { type: 'boolean' },
       verifyEmails: { type: 'boolean' },
     },
