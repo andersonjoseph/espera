@@ -214,11 +214,24 @@ export class UsersService {
 
       const userExists =
         existingUsers.findIndex(
-          (user) => user.waitlist.toString() === input.waitlist,
+          (user) =>
+            user.waitlist.toString() === input.waitlist &&
+            user._id.toString() !== currentUser._id.toString(),
         ) >= 0;
 
       if (userExists) throw new ConflictException('User already exists');
     }
+
+    const lastUser = await this.getLastUser();
+
+    if (
+      input.position &&
+      lastUser?.position &&
+      input.position > lastUser.position
+    )
+      throw new ConflictException(
+        `New position can not be greater than the last position (${lastUser.position})`,
+      );
 
     const updatedUser = await this.userRepository.findOneAndUpdate(
       { _id: new ObjectId(id) },
@@ -230,8 +243,6 @@ export class UsersService {
       },
     );
     if (!updatedUser) return updatedUser;
-
-    const lastUser = await this.getLastUser();
 
     if (lastUser?._id.toString() === updatedUser._id.toString())
       await this.cacheManager.del('lastUser');
