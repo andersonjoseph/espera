@@ -222,6 +222,9 @@ describe('waitlists', () => {
 
   describe('/api/waitlists/:id (PATCH)', () => {
     it('should update and return the updated waitlist', async () => {
+      // mock found waitlist to null to prevent 409 conflic (existing waitlist)
+      waitlistRepositoryMock.findOne = jest.fn().mockResolvedValue(null);
+
       const updatedData = {
         name: 'new waitlist name',
         options: {
@@ -240,6 +243,11 @@ describe('waitlists', () => {
       expect(res.body).toHaveProperty('_id');
       expect(res.body).toHaveProperty('name');
       expect(res.body).toHaveProperty('options');
+
+      // reset mock
+      waitlistRepositoryMock.findOne = jest
+        .fn()
+        .mockResolvedValue(waitlistResultMock);
     });
   });
 });
