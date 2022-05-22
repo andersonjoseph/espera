@@ -24,7 +24,18 @@ export function EditUserModal({ user, clearTable }) {
     data.waitlist = params.id;
     if (data.name === '') delete data.name;
 
-    await updateUser(user._id, data);
+    try {
+      await updateUser(user._id, data);
+    }
+    catch(err) {
+      let message = err.response.data.message;
+      if (err.response.data.message instanceof Array) {
+	message = message.map((msg) => msg.message).join('-');
+      }
+      alert.error('Ha ocurrido un error: ' + message);
+      setLoading(false);
+      return;
+    }
     clear(['users', params.id]);
     clearTable();
 

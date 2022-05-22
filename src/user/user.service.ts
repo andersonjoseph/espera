@@ -110,13 +110,12 @@ export class UsersService {
       this.getLastUser(),
     ]);
 
-    if (
+    const userExists =
       existingUsers.findIndex(
         (user) => user.waitlist.toString() === input.waitlist,
-      ) >= 0
-    ) {
-      throw new ConflictException('User already exists');
-    }
+      ) >= 0;
+
+    if (userExists) throw new ConflictException('User already exists');
 
     const position = lastUser ? lastUser.position + 1 : 1;
 
@@ -209,6 +208,17 @@ export class UsersService {
   ): Promise<PaprRepositoryResult<typeof User> | null> {
     const currentUser = await this.userRepository.findById(id);
     if (!currentUser) return currentUser;
+
+    if (input.email) {
+      const existingUsers = await this.getByEmail(input.email);
+
+      const userExists =
+        existingUsers.findIndex(
+          (user) => user.waitlist.toString() === input.waitlist,
+        ) >= 0;
+
+      if (userExists) throw new ConflictException('User already exists');
+    }
 
     const updatedUser = await this.userRepository.findOneAndUpdate(
       { _id: new ObjectId(id) },
