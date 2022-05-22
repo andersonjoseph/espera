@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import Modal from 'react-modal';
 import { clear } from 'suspend-react';
-import { useEditUserModalStore, selectors } from '../stateStore';
+import { useCreateUserModalStore, selectors } from '../stateStore';
 import { useUsersApi } from '../api/useUsersApi';
 import { useForm } from 'react-hook-form';
 import { useAlert } from 'react-alert';
 import { useRoute } from 'wouter';
 
-export function EditUserModal({ user, clearTable }) {
+export function NewUserModal({ clearTable }) {
   const [_, params] = useRoute('/waitlist/:id');
-  const isOpen = useEditUserModalStore(selectors.editUserModalIsOpen);
-  const closeModal = useEditUserModalStore(selectors.editUserCloseModal);
-  const { register, handleSubmit } = useForm();
+  const isOpen = useCreateUserModalStore(selectors.createUserModalIsOpen);
+  const closeModal = useCreateUserModalStore(selectors.createUserCloseModal);
+  const { register, handleSubmit, reset } = useForm();
   const [loading, setLoading] = useState(false);
 
-  const { updateUser } = useUsersApi();
+  const { createUser } = useUsersApi();
   const alert = useAlert();
 
   async function onSubmit(data) {
@@ -25,7 +25,7 @@ export function EditUserModal({ user, clearTable }) {
     if (data.name === '') delete data.name;
 
     try {
-      await updateUser(user._id, data);
+      await createUser(data);
     } catch (err) {
       let message = err.response.data.message;
       if (err.response.data.message instanceof Array) {
@@ -38,8 +38,10 @@ export function EditUserModal({ user, clearTable }) {
     clear(['users', params.id]);
     clearTable();
 
-    alert.success('Usuario editado con éxito');
+    alert.success('Usuario creado con éxito');
+    reset();
     setLoading(false);
+    closeModal();
   }
 
   return (
@@ -50,7 +52,7 @@ export function EditUserModal({ user, clearTable }) {
       onRequestClose={closeModal}
     >
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-slate-900 text-xl font-medium">Editar Usuario</h2>
+        <h2 className="text-slate-900 text-xl font-medium">Crear Usuario</h2>
         <button
           onClick={closeModal}
           className="font-medium text-slate-600 cursor-pointer"
@@ -60,21 +62,8 @@ export function EditUserModal({ user, clearTable }) {
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5">
-          <label className="font-medium text-slate-900 block">Posición</label>
-          <input
-            defaultValue={user.position}
-            className="border border-gray-300 p-2 rounded-lg w-full block"
-            type="number"
-            placeholder="1"
-            required
-            {...register('position')}
-          />
-        </div>
-
-        <div className="mb-5">
           <label className="font-medium text-slate-900 block">Nombre</label>
           <input
-            defaultValue={user.name}
             className="border border-gray-300 p-2 rounded-lg w-full block"
             type="text"
             placeholder="John Doe"
@@ -85,7 +74,6 @@ export function EditUserModal({ user, clearTable }) {
         <div className="mb-5">
           <label className="font-medium text-slate-900 block">Email</label>
           <input
-            defaultValue={user.email}
             className="border border-gray-300 p-2 rounded-lg w-full block"
             type="email"
             placeholder="usuario@email.com"
@@ -94,24 +82,12 @@ export function EditUserModal({ user, clearTable }) {
           />
         </div>
 
-        <div className="mb-5">
-          <label className="font-medium text-slate-900 block">Referidos</label>
-          <input
-            defaultValue={user.referrers}
-            className="border border-gray-300 p-2 rounded-lg w-full block"
-            type="number"
-            placeholder="1"
-            required
-            {...register('referrers')}
-          />
-        </div>
-
         <div className="text-right mt-10">
           <button
             disabled={loading}
             className="bg-indigo-700 hover:bg-indigo-900 text-white font-medium px-8 py-4 rounded-lg disabled:opacity-75"
           >
-            Editar Usuario
+            Crear Usuario
           </button>
         </div>
       </form>

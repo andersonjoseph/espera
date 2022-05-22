@@ -2,9 +2,13 @@ import create from 'zustand';
 import { ApiClient } from './api/ApiClient';
 
 export const selectors = {
-  modalIsOpen: (state) => state.modalIsOpen,
-  closeModal: (state) => state.closeModal,
-  openModal: (state) => state.openModal,
+  editUserModalIsOpen: (state) => state.editUserModalIsOpen,
+  editUserCloseModal: (state) => state.editUserCloseModal,
+  editUserOpenModal: (state) => state.editUserOpenModal,
+
+  createUserModalIsOpen: (state) => state.createUserModalIsOpen,
+  createUserCloseModal: (state) => state.createUserCloseModal,
+  createUserOpenModal: (state) => state.createUserOpenModal,
 
   waitlists: (state) => state.waitlists,
   fetch: (state) => state.fetch,
@@ -13,10 +17,16 @@ export const selectors = {
   deleteWaitlist: (state) => state.deleteWaitlist,
 };
 
-export const useModalStore = create((set) => ({
-  modalIsOpen: false,
-  closeModal: () => set({ modalIsOpen: false }),
-  openModal: () => set({ modalIsOpen: true }),
+export const useEditUserModalStore = create((set) => ({
+  editUserModalIsOpen: false,
+  editUserCloseModal: () => set({ editUserModalIsOpen: false }),
+  editUserOpenModal: () => set({ editUserModalIsOpen: true }),
+}));
+
+export const useCreateUserModalStore = create((set) => ({
+  createUserModalIsOpen: false,
+  createUserCloseModal: () => set({ createUserModalIsOpen: false }),
+  createUserOpenModal: () => set({ createUserModalIsOpen: true }),
 }));
 
 export const useWaitlistStore = create((set, get) => ({

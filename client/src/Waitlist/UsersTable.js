@@ -3,9 +3,14 @@ import { useRoute } from 'wouter';
 import DataTable from 'react-data-table-component';
 import { suspend, clear } from 'suspend-react';
 import { EditUserModal } from './EditUserModal';
+import { NewUserModal } from './NewUserModal';
 import { useUsersApi } from '../api/useUsersApi';
 
-import { useModalStore, selectors } from '../stateStore';
+import {
+  useEditUserModalStore,
+  useCreateUserModalStore,
+  selectors,
+} from '../stateStore';
 import { useAlert } from 'react-alert';
 
 const columns = [
@@ -54,8 +59,17 @@ export function UsersTable() {
 
   const { getUsersByWaitlist, deleteUser } = useUsersApi();
 
-  const openModal = useModalStore(selectors.openModal);
-  const closeModal = useModalStore(selectors.closeModal);
+  const openEditUserModal = useEditUserModalStore(selectors.editUserOpenModal);
+  const closeEditUserModal = useEditUserModalStore(
+    selectors.editUserCloseModal,
+  );
+
+  const openCreateUserModal = useCreateUserModalStore(
+    selectors.createUserOpenModal,
+  );
+  const closeCreateUserModal = useCreateUserModalStore(
+    selectors.createUserCloseModal,
+  );
 
   const data = suspend(async () => {
     const res = await getUsersByWaitlist(params.id);
@@ -67,7 +81,7 @@ export function UsersTable() {
     setClearTable((clearTable) => !clearTable);
     setSelectedUsers([]);
     setShowBottomBar(false);
-    closeModal();
+    closeEditUserModal();
   }
 
   function handleChange(ev) {
@@ -92,7 +106,7 @@ export function UsersTable() {
     clear(['users', params.id]);
     alert.success('Usuarios eliminados correctamente');
     setSelectedUsers([]);
-    showBottomBar(false);
+    setShowBottomBar(false);
     setClearTable((clearTable) => !clearTable);
     setLoading(false);
   }
@@ -110,7 +124,10 @@ export function UsersTable() {
         clearSelectedRows={clearTable}
       />
 
-      <button className="-translate-y-11 text-xs bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg">
+      <button
+        onClick={openCreateUserModal}
+        className="-translate-y-11 text-xs bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg"
+      >
         Agregar Usuario
       </button>
 
@@ -119,6 +136,7 @@ export function UsersTable() {
       {selectedUsers.length > 0 && (
         <EditUserModal clearTable={onClearTable} user={selectedUsers[0]} />
       )}
+      <NewUserModal clearTable={onClearTable} />
 
       {showBottomBar && (
         <div className="bg-white p-4 rounded-lg border fixed bottom-0 left-0 w-full">
@@ -132,7 +150,7 @@ export function UsersTable() {
             </button>
             {showEditButton && (
               <button
-                onClick={openModal}
+                onClick={openEditUserModal}
                 className="bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg disabled:opacity-75"
                 disabled={loading}
               >
