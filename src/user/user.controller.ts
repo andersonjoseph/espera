@@ -103,7 +103,9 @@ export class UsersController {
 
     if (referrer && userReferrer) {
       await this.usersService.addReferrer(referrer);
-      await this.usersService.skip(userReferrer, waitlist.options.userSkips);
+
+      if(waitlist.options.userSkips > 0)
+	await this.usersService.skip(userReferrer, waitlist.options.userSkips);
     }
 
     return user;
