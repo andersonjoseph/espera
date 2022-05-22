@@ -91,8 +91,9 @@ export function UsersTable() {
     await Promise.all(selectedUsers.map((user) => deleteUser(user._id)));
     clear(['users', params.id]);
     alert.success('Usuarios eliminados correctamente');
-    setClearTable((clearTable) => !clearTable);
     setSelectedUsers([]);
+    showBottomBar(false);
+    setClearTable((clearTable) => !clearTable);
     setLoading(false);
   }
 
