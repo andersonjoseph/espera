@@ -47,6 +47,14 @@ export class WaitlistsService {
     id: string,
     input: updateWaitlistDto,
   ): Promise<PaprRepositoryResult<typeof Waitlist> | null> {
+    if (input.name) {
+      const existingWaitlist = await this.getByName(input.name);
+
+      if (existingWaitlist && existingWaitlist._id.toString() !== id) {
+        throw new ConflictException('A waitlist with this name already exists');
+      }
+    }
+
     const newWaitlist = await this.waitlistRepository.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: input },
