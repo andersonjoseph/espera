@@ -90,9 +90,10 @@ export function UsersTable() {
     setLoading(true);
     await Promise.all(selectedUsers.map((user) => deleteUser(user._id)));
     clear(['users', params.id]);
-    setSelectedUsers([]);
     alert.success('Usuarios eliminados correctamente');
-    setLoading(true);
+    setClearTable((clearTable) => !clearTable);
+    setSelectedUsers([]);
+    setLoading(false);
   }
 
   return (
@@ -107,6 +108,10 @@ export function UsersTable() {
         onSelectedRowsChange={handleChange}
         clearSelectedRows={clearTable}
       />
+
+      <button className="-translate-y-11 text-xs bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg">
+        Agregar Usuario
+      </button>
 
       <span className="mb-20 block w-full bg-black" />
 

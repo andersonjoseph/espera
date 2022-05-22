@@ -40,7 +40,18 @@ export function NewWaitlistForm() {
 
     data.options.userSkips = Number(data.options.userSkips);
 
-    const res = await createWaitlist(data);
+    let res;
+    try {
+      res = await createWaitlist(data);
+    } catch (err) {
+      let message = err.response.data.message;
+      if (err.response.data.message instanceof Array) {
+        message = message.map((msg) => msg.message).join('-');
+      }
+      alert.error('Ha ocurrido un error: ' + message);
+      setLoading(false);
+      return;
+    }
     addWaitlistStore(res);
     setLoading(false);
 
