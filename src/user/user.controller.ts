@@ -11,6 +11,8 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  StreamableFile,
   UseGuards,
 } from '@nestjs/common';
 import User from './user.model';
@@ -27,6 +29,9 @@ import {
 import { updateUserDto, updateUserValidator } from './updateUser.dto';
 import { WaitlistsService } from '../waitlist/waitlist.service';
 import { AuthGuard } from '@nestjs/passport';
+import JsonStreamStringify from 'json-stream-stringify';
+import Waitlist from 'src/waitlist/waitlist.model';
+import { Response } from 'express';
 
 @Controller('api/users')
 export class UsersController {
@@ -35,6 +40,42 @@ export class UsersController {
     private readonly waitlistService: WaitlistsService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('export')
+  async export(
+    @Query(
+      'waitlist',
+      new DefaultValuePipe(null),
+      new FastestValidatorPipe(objectIdValidator, { optional: true }),
+    )
+    waitlist: string | null,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    let waitlistObject:
+      | PaprRepositoryResult<typeof Waitlist>
+      | null
+      | undefined;
+    if (waitlist) {
+      waitlistObject = await this.waitlistService.getById(waitlist);
+
+      if (!waitlistObject)
+        throw new ConflictException('Waitlist does not exist');
+    }
+
+    const stream = new JsonStreamStringify({
+      waitlist: waitlistObject,
+      records: this.usersService.getAll(waitlist),
+    });
+
+    res.set({
+      'Content-Type': 'application/json',
+      'Content-Disposition': `attachment; filename="export-${new Date()}.json"`,
+    });
+
+    return new StreamableFile(stream);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParsePositiveNumberPipe)
@@ -66,6 +107,7 @@ export class UsersController {
     return response;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findOne(
     @Param('id', new FastestValidatorPipe(objectIdValidator)) id: string,

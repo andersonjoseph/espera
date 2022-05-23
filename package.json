@@ -29,6 +29,7 @@
     "fast-glob": "^3.2.11",
     "fastest-validator": "^1.12.0",
     "fastq": "^1.13.0",
+    "json-stream-stringify": "^2.0.4",
     "jwks-rsa": "^2.1.2",
     "mongodb": "^4.5.0",
     "papr": "^3.0.0",
