@@ -3,6 +3,13 @@ import { ApiClient } from './ApiClient';
 export function useUsersApi() {
   return {
     getUsers: async () => (await ApiClient.instance.get('users')).data,
+    exportUsers: async (waitlist) =>
+      (
+        await ApiClient.instance.get('users/export', {
+          responseType: 'blob',
+	  params: {waitlist}
+        })
+      ).data,
     getUsersByWaitlist: async (waitlist) =>
       (
         await ApiClient.instance.get('users', {

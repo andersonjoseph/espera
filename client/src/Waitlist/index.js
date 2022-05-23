@@ -3,7 +3,6 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { WaitlistForm } from './WaitlistForm';
 import { UsersTable } from './UsersTable';
-import { ExportForm } from './Export';
 import { useRoute } from 'wouter';
 import { suspend } from 'suspend-react';
 import { useWaitlistApi } from '../api/useWaitlistApi';
@@ -29,9 +28,6 @@ export function Waitlist() {
           <Tab>
             <span className="text-slate-800">Usuarios</span>
           </Tab>
-          <Tab>
-            <span className="text-slate-800">Exportar</span>
-          </Tab>
         </TabList>
 
         <TabPanel>
@@ -43,12 +39,6 @@ export function Waitlist() {
         <TabPanel>
           <Suspense fallback={null}>
             <UsersTable />
-          </Suspense>
-        </TabPanel>
-
-        <TabPanel>
-          <Suspense fallback={null}>
-            <ExportForm />
           </Suspense>
         </TabPanel>
       </Tabs>

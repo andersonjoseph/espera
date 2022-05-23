@@ -5,6 +5,8 @@ import { useLocation, useRoute } from 'wouter';
 import { useWaitlistApi } from '../api/useWaitlistApi';
 import { useAlert } from 'react-alert';
 import { selectors, useWaitlistStore } from '../stateStore';
+import { useUsersApi } from '../api/useUsersApi';
+import fileDownload from 'js-file-download';
 
 function FieldContent(props) {
   return (
@@ -38,6 +40,7 @@ export function WaitlistForm() {
 
   const { register, handleSubmit, reset } = useForm();
   const { getWaitlist, updateWaitlist, deleteWaitlist } = useWaitlistApi();
+  const { exportUsers } = useUsersApi();
 
   const [loading, setLoading] = useState(false);
 
@@ -71,6 +74,12 @@ export function WaitlistForm() {
 
     setLoading(false);
     alert.success('Waitlist editada con éxito');
+  }
+
+  async function onExport(ev) {
+    ev.preventDefault();
+    const data = await exportUsers(params.id);
+    fileDownload(data, `export-waitlist-${new Date()}.json`);
   }
 
   async function onDeleteWaitlist(ev) {
@@ -127,6 +136,20 @@ export function WaitlistForm() {
             min={0}
             {...register('options.userSkips')}
           />
+        </FieldInput>
+      </FormField>
+
+      <FormField>
+        <FieldContent title="Exportar Waitlist">
+          Exporta esta waitlist en formato JSON
+        </FieldContent>
+        <FieldInput>
+          <button
+            onClick={onExport}
+            className="text-xs bg-white-700 border border-indigo-500 text-indigo-500 font-medium px-4 py-2 rounded-lg"
+          >
+            Exportar
+          </button>
         </FieldInput>
       </FormField>
 
