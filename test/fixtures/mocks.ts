@@ -1,6 +1,4 @@
-import {
-  CanActivate,
-} from '@nestjs/common';
+import { CanActivate } from '@nestjs/common';
 
 const repositoryMock = (
   result: Record<string, unknown>,
@@ -31,8 +29,6 @@ export const waitlistResultMock = {
   name: 'lista',
   options: {
     userSkips: 1,
-    sendEmails: true,
-    verifyEmails: true,
   },
   date: '2022-05-11T22:13:28.249Z',
   _id: '627c35084252f301edf7c44f',

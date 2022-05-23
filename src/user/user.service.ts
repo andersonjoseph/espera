@@ -30,10 +30,11 @@ export class UsersService {
 
   async getCount(waitlist: string | null): Promise<number> {
     let count: number;
-    if(waitlist) 
-      count = await this.userRepository.countDocuments({waitlist: new ObjectId(waitlist)});
-    else 
-      count = await this.userRepository.countDocuments({});
+    if (waitlist)
+      count = await this.userRepository.countDocuments({
+        waitlist: new ObjectId(waitlist),
+      });
+    else count = await this.userRepository.countDocuments({});
 
     return count;
   }

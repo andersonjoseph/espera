@@ -130,38 +130,6 @@ export function WaitlistForm() {
         </FieldInput>
       </FormField>
 
-      <FormField>
-        <FieldContent title="Enviar correo a los usuarios">
-          Los usuarios que se registren en la waitlist recibiran un correo que
-          contiene la informacion sobre su enlace de referido y posición en la
-          cola
-        </FieldContent>
-        <FieldInput>
-          <input
-            key={waitlistData.options.sendEmails}
-            defaultChecked={waitlistData.options.sendEmails}
-            className="form-check-input appearance-none h-4 w-4 border border-gray-400 rounded-sm bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-            type="checkbox"
-            {...register('options.sendEmails')}
-          />
-        </FieldInput>
-      </FormField>
-      <FormField>
-        <FieldContent title="Verificar nuevos usuarios">
-          Los nuevos usuarios en tu waitlist recibiran un email de verificación.
-        </FieldContent>
-        <FieldInput>
-          <input
-            key={waitlistData.options.verifyEmails}
-            defaultChecked={waitlistData.options.verifyEmails}
-            className="form-check-input appearance-none h-4 w-4 border border-gray-400 rounded-sm bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-            type="checkbox"
-            id="flexCheckDefault"
-            {...register('options.verifyEmails')}
-          />
-        </FieldInput>
-      </FormField>
-
       <div className="justify-end flex gap-4 disabled">
         <button
           onClick={onDeleteWaitlist}

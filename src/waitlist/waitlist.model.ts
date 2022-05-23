@@ -7,8 +7,6 @@ const waitlistSchema = schema({
   options: types.object(
     {
       userSkips: types.number({ required: true }),
-      sendEmails: types.boolean({ required: true }),
-      verifyEmails: types.boolean({ required: true }),
     },
     {
       additionalProperties: false,

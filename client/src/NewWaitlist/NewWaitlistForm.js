@@ -96,37 +96,6 @@ export function NewWaitlistForm() {
         </FieldInput>
       </FormField>
 
-      <FormField>
-        <FieldContent title="Enviar correo a los usuarios">
-          Los usuarios que se registren en la waitlist recibiran un correo que
-          contiene la informacion sobre su enlace de referido y posición en la
-          cola
-        </FieldContent>
-        <FieldInput>
-          <input
-            className="form-check-input appearance-none h-4 w-4 border border-gray-400 rounded-sm bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            {...register('options.sendEmails')}
-          />
-        </FieldInput>
-      </FormField>
-      <FormField>
-        <FieldContent title="Verificar nuevos usuarios">
-          Los nuevos usuarios en tu waitlist recibiran un email de verificación.
-        </FieldContent>
-        <FieldInput>
-          <input
-            className="form-check-input appearance-none h-4 w-4 border border-gray-400 rounded-sm bg-white checked:bg-indigo-600 checked:border-indigo-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-            type="checkbox"
-            value=""
-            id="flexCheckDefault"
-            {...register('options.verifyEmails')}
-          />
-        </FieldInput>
-      </FormField>
-
       <div className="text-right">
         <button
           className="bg-indigo-700 hover:bg-indigo-900 text-white font-medium px-8 py-4 rounded-lg disabled:opacity-75"

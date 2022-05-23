@@ -91,8 +91,6 @@ describe('waitlists', () => {
         name: 'lalista',
         options: {
           userSkips: 1,
-          sendEmails: true,
-          verifyEmails: true,
         },
       };
 
@@ -118,8 +116,6 @@ describe('waitlists', () => {
         name: 'lalista',
         options: {
           userSkips: 1,
-          sendEmails: true,
-          verifyEmails: true,
         },
       };
 
@@ -135,8 +131,6 @@ describe('waitlists', () => {
       let newWaitlist: object = {
         options: {
           userSkips: 1,
-          sendEmails: true,
-          verifyEmails: true,
         },
       };
 
@@ -151,8 +145,6 @@ describe('waitlists', () => {
         name: '',
         options: {
           userSkips: 1,
-          sendEmails: true,
-          verifyEmails: true,
         },
       };
 
@@ -176,40 +168,7 @@ describe('waitlists', () => {
       // missing options.userSkips
       newWaitlist = {
         name: 'lista1',
-        options: {
-          sendEmails: true,
-          verifyEmails: true,
-        },
-      };
-
-      res = await supertest(app.getHttpServer())
-        .post('/api/waitlists')
-        .send(newWaitlist);
-
-      expect(res.status).toBe(400);
-
-      // missing options.sendEmails
-      newWaitlist = {
-        name: 'lista1',
-        options: {
-          userSkips: 2,
-          verifyEmails: true,
-        },
-      };
-
-      res = await supertest(app.getHttpServer())
-        .post('/api/waitlists')
-        .send(newWaitlist);
-
-      expect(res.status).toBe(400);
-
-      // missing options.verifyEmails
-      newWaitlist = {
-        name: 'lista1',
-        options: {
-          userSkips: 2,
-          sendEmails: true,
-        },
+        options: {},
       };
 
       res = await supertest(app.getHttpServer())
@@ -229,8 +188,6 @@ describe('waitlists', () => {
         name: 'new waitlist name',
         options: {
           userSkips: 2,
-          sendEmails: true,
-          verifyEmails: true,
         },
       };
 
