@@ -99,9 +99,9 @@ export class UsersService {
     return user;
   }
 
-  private async getLastUser(waitlist: string): Promise<PaprRepositoryResult<
-    typeof User
-  > | null> {
+  private async getLastUser(
+    waitlist: string,
+  ): Promise<PaprRepositoryResult<typeof User> | null> {
     const cachedLastUser = await this.cacheManager.get<
       PaprRepositoryResult<typeof User>
     >('lastUser');
@@ -110,7 +110,7 @@ export class UsersService {
 
     const [lastUser] = await this.userRepository.aggregate([
       {
-	$match: {waitlist: new ObjectId(waitlist)}
+        $match: { waitlist: new ObjectId(waitlist) },
       },
       {
         $sort: { position: -1 },
@@ -167,20 +167,25 @@ export class UsersService {
 
     return newUser;
   }
+  async removeByWaitlist(id: string): Promise<void> {
+    await this.userRepository.findOneAndDelete({
+      waitlist: new ObjectId(id),
+    });
+  }
 
   async remove(id: string): Promise<void> {
     const deletedUser = await this.userRepository.findOneAndDelete({
       _id: new ObjectId(id),
     });
-    if(!deletedUser) return;
+    if (!deletedUser) return;
 
     await this.userRepository.updateMany(
       {
-	position: { $gte: deletedUser.position },
-	waitlist: deletedUser.waitlist
+        position: { $gte: deletedUser.position },
+        waitlist: deletedUser.waitlist,
       },
       {
-	$inc: { position: -1 },
+        $inc: { position: -1 },
       },
     );
 

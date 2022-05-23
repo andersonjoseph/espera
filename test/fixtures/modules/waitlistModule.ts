@@ -4,6 +4,7 @@ import { WaitlistController } from '../../../src/waitlist/waitlist.controller';
 import { getPaprRepositoryToken, PaprRepository } from '../../../src/papr';
 import Waitlist from '../../../src/waitlist/waitlist.model';
 import { waitlistRepositoryMock } from '../mocks';
+import {userProviders} from './userModule';
 
 function serviceFactory(
   waitlistRepository: PaprRepository<typeof Waitlist>,
@@ -21,6 +22,7 @@ export const waitlistProviders = [
     provide: getPaprRepositoryToken(Waitlist),
     useValue: waitlistRepositoryMock,
   },
+  ...userProviders,
 ];
 
 export const WaitlistModuleMock: TestingModuleBuilder =

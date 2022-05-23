@@ -15,7 +15,7 @@ function serviceFactory(
   return new UsersService(usersRepository, cacheManager);
 }
 
-const userProviders = [
+export const userProviders = [
   {
     provide: UsersService,
     useFactory: serviceFactory,

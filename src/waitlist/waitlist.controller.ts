@@ -24,11 +24,15 @@ import {
   updateWaitlistDto,
 } from './updateWaitlist.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UsersService } from '../user/user.service';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('api/waitlists')
 export class WaitlistController {
-  constructor(private readonly waitlistsService: WaitlistsService) {}
+  constructor(
+    private readonly waitlistsService: WaitlistsService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post()
   async create(
@@ -62,7 +66,10 @@ export class WaitlistController {
   async remove(
     @Param('id', new FastestValidatorPipe(objectIdValidator)) id: string,
   ): Promise<void> {
-    await this.waitlistsService.remove(id);
+    Promise.all([
+      await this.waitlistsService.remove(id),
+      await this.userService.removeByWaitlist(id),
+    ]);
   }
 
   @Patch(':id')
