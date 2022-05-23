@@ -90,10 +90,12 @@ export function WaitlistForm() {
         '¿Quieres eliminar esta Waitlist? Esta opción no es reversible',
       )
     )
-      setLoading(true);
+      return;
+
+    setLoading(true);
 
     const deletedWaitlist = await deleteWaitlist(params.id);
-    deleteWaitlistStore(deletedWaitlist);
+    deleteWaitlistStore({_id: params.id});
     clear(['waitlist', params.id]);
 
     alert.success('Waitlist eliminada');
