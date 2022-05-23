@@ -12,11 +12,11 @@ import { suspend } from 'suspend-react';
 import { selectors, useWaitlistStore } from './stateStore';
 
 function Main() {
-  const { getAccessTokenWithPopup } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
   const fetchWaitlists = useWaitlistStore(selectors.fetch);
 
   suspend(async () => {
-    const token = await getAccessTokenWithPopup({
+    const token = await getAccessTokenSilently({
       audience: 'espera-auth',
     });
     new ApiClient(token);
