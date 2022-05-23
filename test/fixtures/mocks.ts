@@ -1,7 +1,5 @@
 import {
   CanActivate,
-  ExecutionContext,
-  UnauthorizedException,
 } from '@nestjs/common';
 
 const repositoryMock = (
