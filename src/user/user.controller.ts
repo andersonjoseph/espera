@@ -51,7 +51,7 @@ export class UsersController {
       waitlist
         ? await this.usersService.getByWaitlist(waitlist, page)
         : await this.usersService.get(page),
-      await this.usersService.getCount(),
+      await this.usersService.getCount(waitlist),
     ]);
 
     const response = {
