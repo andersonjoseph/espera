@@ -92,7 +92,7 @@ export class UsersService {
 
     const [lastUser] = await this.userRepository.aggregate([
       {
-        $sort: { date: -1 },
+        $sort: { position: -1 },
       },
       {
         $limit: 1,
