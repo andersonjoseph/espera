@@ -99,7 +99,7 @@ export class UsersService {
     return user;
   }
 
-  private async getLastUser(): Promise<PaprRepositoryResult<
+  private async getLastUser(waitlist: string): Promise<PaprRepositoryResult<
     typeof User
   > | null> {
     const cachedLastUser = await this.cacheManager.get<
@@ -109,6 +109,9 @@ export class UsersService {
     if (cachedLastUser) return cachedLastUser;
 
     const [lastUser] = await this.userRepository.aggregate([
+      {
+	$match: {waitlist: new ObjectId(waitlist)}
+      },
       {
         $sort: { position: -1 },
       },
@@ -125,7 +128,7 @@ export class UsersService {
   ): Promise<PaprRepositoryResult<typeof User>> {
     const [existingUsers, lastUser] = await Promise.all([
       this.getByEmail(input.email),
-      this.getLastUser(),
+      this.getLastUser(input.waitlist),
     ]);
 
     const userExists =
@@ -169,22 +172,22 @@ export class UsersService {
     const deletedUser = await this.userRepository.findOneAndDelete({
       _id: new ObjectId(id),
     });
+    if(!deletedUser) return;
 
-    if (deletedUser) {
-      await this.userRepository.updateMany(
-        {
-          position: { $gte: deletedUser.position },
-        },
-        {
-          $inc: { position: -1 },
-        },
-      );
+    await this.userRepository.updateMany(
+      {
+	position: { $gte: deletedUser.position },
+	waitlist: deletedUser.waitlist
+      },
+      {
+	$inc: { position: -1 },
+      },
+    );
 
-      const lastUser = await this.getLastUser();
+    const lastUser = await this.getLastUser(deletedUser.waitlist.toString());
 
-      if (lastUser?._id.toString() === deletedUser._id.toString())
-        await this.cacheManager.del('lastUser');
-    }
+    if (!lastUser || lastUser?._id.toString() === deletedUser._id.toString())
+      await this.cacheManager.del('lastUser');
   }
 
   async addReferrer(id: string): Promise<void> {
@@ -240,7 +243,7 @@ export class UsersService {
       if (userExists) throw new ConflictException('User already exists');
     }
 
-    const lastUser = await this.getLastUser();
+    const lastUser = await this.getLastUser(currentUser.waitlist.toString());
 
     if (
       input.position &&
